@@ -12,8 +12,9 @@ import ErrorMessage from "../components/ErrorMessage";
 import { useState } from "react";
 import MovieCard from "../components/MovieCard";
 import EmptyContentMessage from "../components/EmptyContentMessage";
+import { ScreenProps } from "../App";
 
-export default function HomeScreen({ navigation }: any) {
+export default function HomeScreen({ navigation }: ScreenProps<"Home">) {
   const [numColumns] = useState<number>(2);
 
   const { data, isLoading, error, isFetching, hasNextPage, fetchNextPage } =

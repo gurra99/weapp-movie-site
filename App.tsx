@@ -1,19 +1,31 @@
 import { StyleSheet, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import {
+  createNativeStackNavigator,
+  NativeStackScreenProps,
+} from "@react-navigation/native-stack";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import HomeScreen from "./screens/HomeScreen";
+import ActorsScreen from "./screens/ActorScreen";
+
+export type RootStackParamList = {
+  Home: undefined; // No parameters for Home
+  Actors: { id: number; title: string }; // id and title parameter for Actors
+};
 
 const client = new QueryClient();
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
+export type ScreenProps<T extends keyof RootStackParamList> =
+  NativeStackScreenProps<RootStackParamList, T>;
 
 export default function App() {
   return (
     <View style={styles.container}>
       <QueryClientProvider client={client}>
         <NavigationContainer>
-          <Stack.Navigator>
+          <Stack.Navigator screenOptions={{ headerTitleAlign: "center" }}>
             <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Actors" component={ActorsScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </QueryClientProvider>
