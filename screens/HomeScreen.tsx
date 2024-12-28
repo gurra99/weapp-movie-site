@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { ActivityIndicator, FlatList, StyleSheet } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { IMovie, ITopRatedMovies } from "../models/movie";
 import MovieCard from "../components/MovieCard";
 import { fetchTopMovies } from "../api/movies";
+import ErrorMessage from "../components/ErrorMessage";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { sortByReleaseDate } from "../utilities/sortMovies";
 import { ScreenProps } from "../App";
 import EmptyContentMessage from "../components/EmptyContentMessage";
 
@@ -59,6 +61,9 @@ export default function HomeScreen({ navigation }: ScreenProps<"Home">) {
   if (error) {
     return <ErrorMessage text={error.message} />;
   }
+
+  console.log("home");
+  console.log(data);
 
   return (
     <View style={styles.container}>
