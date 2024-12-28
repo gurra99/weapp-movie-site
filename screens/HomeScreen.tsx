@@ -1,7 +1,8 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import { ITopRatedMovies } from "../models/movie";
 import { fetchTopMovies } from "../api/movies";
+import ErrorMessage from "../components/ErrorMessage";
 
 export default function HomeScreen() {
   const { data, isLoading, error, isFetching, hasNextPage, fetchNextPage } =
@@ -12,7 +13,13 @@ export default function HomeScreen() {
       getNextPageParam: (lastPage: ITopRatedMovies) => {},
     });
 
-  console.log(data);
+  if (isLoading) {
+    return <ActivityIndicator />;
+  }
+
+  if (error) {
+    return <ErrorMessage text={error.message} />;
+  }
 
   return (
     <View style={styles.container}>
