@@ -18,8 +18,6 @@ interface MovieCardProps {
 export default function MovieCard(props: MovieCardProps) {
   const { title, poster_path, release_date, onPress } = props;
 
-  console.log("movie-card");
-
   return (
     <Pressable
       style={({ pressed }) => [

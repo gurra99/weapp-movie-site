@@ -65,8 +65,6 @@ export default function ActorsScreen({
     return <ErrorMessage text={error.message} />;
   }
 
-  console.log(actors);
-
   return (
     <>
       {actors?.length > 0 ? (
