@@ -1,10 +1,20 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
-import { ITopRatedMovies } from "../models/movie";
+import {
+  StyleSheet,
+  View,
+  Text,
+  ActivityIndicator,
+  FlatList,
+} from "react-native";
+import { IMovie, ITopRatedMovies } from "../models/movie";
 import { fetchTopMovies } from "../api/movies";
 import ErrorMessage from "../components/ErrorMessage";
+import { useState } from "react";
+import MovieCard from "../components/MovieCard";
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }: any) {
+  const [numColumns] = useState<number>(2);
+
   const { data, isLoading, error, isFetching, hasNextPage, fetchNextPage } =
     useInfiniteQuery<ITopRatedMovies>({
       queryKey: ["movies"],
@@ -12,6 +22,24 @@ export default function HomeScreen() {
       initialPageParam: 1,
       getNextPageParam: (lastPage: ITopRatedMovies) => {},
     });
+
+  function renderMovieItem({ item }: { item: IMovie }) {
+    function pressHandler() {
+      navigation.navigate("Actors", {
+        id: item?.id ? item?.id : 0,
+        title: item?.title ? item?.title : "0",
+      });
+    }
+
+    return (
+      <MovieCard
+        title={item.title}
+        poster_path={item.poster_path || "noImageMovie"}
+        release_date={item.release_date || "Unknown"}
+        onPress={pressHandler}
+      />
+    );
+  }
 
   if (isLoading) {
     return <ActivityIndicator />;
@@ -23,7 +51,12 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Text>Test</Text>
+      <FlatList
+        data={[]}
+        keyExtractor={(item: IMovie) => item?.id?.toString() || "0"}
+        renderItem={renderMovieItem}
+        numColumns={numColumns}
+      />
     </View>
   );
 }
