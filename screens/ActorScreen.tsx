@@ -1,16 +1,20 @@
-import { useQuery } from "@tanstack/react-query";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
-import { fetchActorsByMovieId } from "../api/actors";
-import { ScreenProps } from "../App";
+import { StyleSheet, ActivityIndicator, FlatList, View } from "react-native";
 import ErrorMessage from "../components/ErrorMessage";
-import { useEffect } from "react";
-import { IActor } from "../models/actor";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { fetchActorsByMovieId } from "../api/actors";
 import ActorCard from "../components/ActorCard";
+import { IActor } from "../models/actor";
+import { transformDataIntoRows } from "../utilities/transformData";
+import { ScreenProps } from "../App";
+import EmptyContentMessage from "../components/EmptyContentMessage";
 
 export default function ActorsScreen({
   navigation,
   route,
 }: ScreenProps<"Actors">) {
+  const [numColumns] = useState<number>(3);
+  const [rows, setRows] = useState([] as IActor[][]);
   const { id, title } = route.params;
 
   const {
@@ -26,7 +30,11 @@ export default function ActorsScreen({
     navigation.setOptions({ title: title });
   }, []);
 
-  useEffect(() => {}, [actors]);
+  useEffect(() => {
+    if (actors?.length > 1) {
+      setRows(transformDataIntoRows(actors, numColumns));
+    }
+  }, [actors]);
 
   const renderItem = ({ item }: { item: IActor }) => {
     if (item.id === -1) {
@@ -43,6 +51,12 @@ export default function ActorsScreen({
     );
   };
 
+  const renderRow = ({ item }: { item: IActor[] }) => (
+    <View style={styles.row}>
+      {item.map((columnItem) => renderItem({ item: columnItem }))}
+    </View>
+  );
+
   if (isLoading) {
     return <ActivityIndicator />;
   }
@@ -53,7 +67,20 @@ export default function ActorsScreen({
 
   console.log(actors);
 
-  return <View></View>;
+  return (
+    <>
+      {actors?.length > 0 ? (
+        <FlatList
+          data={rows.slice(0, 30)}
+          renderItem={renderRow}
+          keyExtractor={(_, index) => `row-${index}`}
+          contentContainerStyle={styles.flatListContainer}
+        />
+      ) : (
+        <EmptyContentMessage text="There are no actors for this movie" />
+      )}
+    </>
+  );
 }
 
 const styles = StyleSheet.create({
