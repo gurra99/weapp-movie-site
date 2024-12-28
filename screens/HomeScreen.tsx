@@ -11,6 +11,7 @@ import { fetchTopMovies } from "../api/movies";
 import ErrorMessage from "../components/ErrorMessage";
 import { useState } from "react";
 import MovieCard from "../components/MovieCard";
+import EmptyContentMessage from "../components/EmptyContentMessage";
 
 export default function HomeScreen({ navigation }: any) {
   const [numColumns] = useState<number>(2);
@@ -51,12 +52,16 @@ export default function HomeScreen({ navigation }: any) {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={[]}
-        keyExtractor={(item: IMovie) => item?.id?.toString() || "0"}
-        renderItem={renderMovieItem}
-        numColumns={numColumns}
-      />
+      {!isLoading && data ? (
+        <FlatList
+          data={[]}
+          keyExtractor={(item: IMovie) => item?.id?.toString() || "0"}
+          renderItem={renderMovieItem}
+          numColumns={numColumns}
+        />
+      ) : (
+        <EmptyContentMessage text="There are no movies" />
+      )}
     </View>
   );
 }
