@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { fetchActorsByMovieId } from "../api/actors";
 import { ScreenProps } from "../App";
+import ErrorMessage from "../components/ErrorMessage";
 
 export default function ActorsScreen({
   navigation,
@@ -17,6 +18,18 @@ export default function ActorsScreen({
     queryKey: ["actors", id],
     queryFn: () => fetchActorsByMovieId(id || 1),
   });
+
+  useEffect(() => {
+    navigation.setOptions({ title: title });
+  }, []);
+
+  if (isLoading) {
+    return <ActivityIndicator />;
+  }
+
+  if (error) {
+    return <ErrorMessage text={error.message} />;
+  }
 
   console.log(actors);
 
