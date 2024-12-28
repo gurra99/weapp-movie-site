@@ -1,18 +1,11 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import {
-  StyleSheet,
-  View,
-  Text,
-  ActivityIndicator,
-  FlatList,
-} from "react-native";
-import { IMovie, ITopRatedMovies } from "../models/movie";
-import { fetchTopMovies } from "../api/movies";
-import ErrorMessage from "../components/ErrorMessage";
 import { useState } from "react";
+import { ActivityIndicator, FlatList, StyleSheet } from "react-native";
+import { IMovie, ITopRatedMovies } from "../models/movie";
 import MovieCard from "../components/MovieCard";
-import EmptyContentMessage from "../components/EmptyContentMessage";
+import { fetchTopMovies } from "../api/movies";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { ScreenProps } from "../App";
+import EmptyContentMessage from "../components/EmptyContentMessage";
 
 export default function HomeScreen({ navigation }: ScreenProps<"Home">) {
   const [numColumns] = useState<number>(2);
@@ -53,6 +46,12 @@ export default function HomeScreen({ navigation }: ScreenProps<"Home">) {
     }
   };
 
+  // Combines the results of all pages into a single array of movies.
+  const getFlattenedMovies = () => {
+    const movies = data?.pages.map((page) => page.results).flat();
+    return sortByReleaseDate(movies || []);
+  };
+
   if (isLoading) {
     return <ActivityIndicator />;
   }
@@ -63,9 +62,9 @@ export default function HomeScreen({ navigation }: ScreenProps<"Home">) {
 
   return (
     <View style={styles.container}>
-      {!isLoading && data ? (
+      {!isLoading && getFlattenedMovies().length > 0 ? (
         <FlatList
-          data={data}
+          data={getFlattenedMovies()}
           keyExtractor={(item: IMovie) => item?.id?.toString() || "0"}
           renderItem={renderMovieItem}
           numColumns={numColumns}
