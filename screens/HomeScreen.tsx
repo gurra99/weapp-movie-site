@@ -43,6 +43,12 @@ export default function HomeScreen({ navigation }: ScreenProps<"Home">) {
     );
   }
 
+  const loadMoreMovies = () => {
+    if (hasNextPage && !isFetching) {
+      fetchNextPage();
+    }
+  };
+
   if (isLoading) {
     return <ActivityIndicator />;
   }
