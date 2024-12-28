@@ -22,7 +22,11 @@ export default function HomeScreen({ navigation }: ScreenProps<"Home">) {
       queryKey: ["movies"],
       queryFn: fetchTopMovies,
       initialPageParam: 1,
-      getNextPageParam: (lastPage: ITopRatedMovies) => {},
+      getNextPageParam: (lastPage: ITopRatedMovies) => {
+        return lastPage.page < lastPage.total_pages
+          ? lastPage.page + 1
+          : undefined;
+      },
     });
 
   function renderMovieItem({ item }: { item: IMovie }) {
@@ -61,10 +65,11 @@ export default function HomeScreen({ navigation }: ScreenProps<"Home">) {
     <View style={styles.container}>
       {!isLoading && data ? (
         <FlatList
-          data={[]}
+          data={data}
           keyExtractor={(item: IMovie) => item?.id?.toString() || "0"}
           renderItem={renderMovieItem}
           numColumns={numColumns}
+          onEndReached={loadMoreMovies}
         />
       ) : (
         <EmptyContentMessage text="There are no movies" />
