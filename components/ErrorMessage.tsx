@@ -5,6 +5,8 @@ interface ErrorMessageProps {
 }
 
 export default function ErrorMessage({ text }: ErrorMessageProps) {
+  console.log(text);
+
   return (
     <View style={styles.container}>
       <Text style={styles.errorMessage}>{text}</Text>
