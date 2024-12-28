@@ -3,6 +3,9 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { fetchActorsByMovieId } from "../api/actors";
 import { ScreenProps } from "../App";
 import ErrorMessage from "../components/ErrorMessage";
+import { useEffect } from "react";
+import { IActor } from "../models/actor";
+import ActorCard from "../components/ActorCard";
 
 export default function ActorsScreen({
   navigation,
@@ -23,6 +26,23 @@ export default function ActorsScreen({
     navigation.setOptions({ title: title });
   }, []);
 
+  useEffect(() => {}, [actors]);
+
+  const renderItem = ({ item }: { item: IActor }) => {
+    if (item.id === -1) {
+      // Render nothing for empty placeholders
+      return <View style={[styles.item, styles.placeholder]} key={item.id} />;
+    }
+    return (
+      <ActorCard
+        id={item.id || 0}
+        name={item.name || "Unknown"}
+        profile_path={item.profile_path || "noImageActor"}
+        key={item.id}
+      />
+    );
+  };
+
   if (isLoading) {
     return <ActivityIndicator />;
   }
@@ -36,4 +56,24 @@ export default function ActorsScreen({
   return <View></View>;
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  flatListContainer: {
+    padding: 10,
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 10,
+  },
+  item: {
+    flex: 1,
+    marginHorizontal: 5,
+    padding: 10,
+    backgroundColor: "#ddd",
+    alignItems: "center",
+    borderRadius: 8,
+  },
+  placeholder: {
+    backgroundColor: "transparent",
+  },
+});
