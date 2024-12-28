@@ -62,9 +62,6 @@ export default function HomeScreen({ navigation }: ScreenProps<"Home">) {
     return <ErrorMessage text={error.message} />;
   }
 
-  console.log("home");
-  console.log(data);
-
   return (
     <View style={styles.container}>
       {!isLoading && getFlattenedMovies().length > 0 ? (

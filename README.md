@@ -2,6 +2,15 @@
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
+## Create a .env file
+
+Create a .env file in the root folder.
+Add this environment variable and the the api key you got from me.
+
+EXPO_PUBLIC_API_KEY=APIKeyYouGotFromMeInYourMail
+
+Dont use "" around the api key.
+
 ## Get started
 
 1. Install dependencies

@@ -6,7 +6,7 @@ import {
 } from "@react-navigation/native-stack";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import HomeScreen from "./screens/HomeScreen";
-import ActorsScreen from "./screens/ActorScreen";
+import ActorsScreen from "./screens/ActorsScreen";
 
 export type RootStackParamList = {
   Home: undefined; // No parameters for Home
