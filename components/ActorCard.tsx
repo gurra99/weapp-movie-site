@@ -11,6 +11,8 @@ interface ActorCardProps {
 export default function ActorCard(props: ActorCardProps) {
   const { id, name, profile_path } = props;
 
+  console.log("actor-card");
+
   return (
     <View style={styles.actorItem} key={id}>
       <Image

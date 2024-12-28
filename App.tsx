@@ -19,6 +19,8 @@ export type ScreenProps<T extends keyof RootStackParamList> =
   NativeStackScreenProps<RootStackParamList, T>;
 
 export default function App() {
+  console.log("App");
+
   return (
     <View style={styles.container}>
       <QueryClientProvider client={client}>
